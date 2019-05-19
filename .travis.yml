@@ -2,11 +2,12 @@
 language: julia
 os:
   - linux
-  - osx
+  # - osx
 julia:
   - 0.6
   - 0.7
   - '1.0'
+  - 1.1
   - nightly
 notifications:
   email: false
@@ -27,6 +28,9 @@ git:
 #before_script: # homebrew for mac
 #  - if [ $TRAVIS_OS_NAME = osx ]; then brew install gcc; fi
 
+install:
+  - ci/install.jl
+
 script:
   # Ignore "Warning: `using A: B`" from julia 0.7:
   - if [ "$TRAVIS_JULIA_VERSION" = "0.7" ];
@@ -36,7 +40,7 @@ script:
         depwarn=error;
     fi
   - echo "$depwarn"
-  - julia --color=yes --depwarn="$depwarn" ci/test.jl
+  - ci/test.jl --depwarn="$depwarn"
 
 after_success:
   # push coverage results to Coveralls
